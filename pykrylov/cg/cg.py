@@ -74,7 +74,7 @@ class CG( KrylovMethod ):
 
         # Initial guess
         guess_supplied = 'guess' in kwargs.keys()
-        x = kwargs.get('guess', np.zeros(n))
+        x = kwargs.get('guess', np.zeros(n, dtype=rhs.dtype))
 
         if store_iterates:
             self.iterates.append(x.copy())
@@ -97,7 +97,7 @@ class CG( KrylovMethod ):
             self.resids.append(y.copy())
 
         ry = np.dot(r,y)
-        self.residNorm0 = residNorm = sqrt(ry)
+        self.residNorm0 = residNorm = np.sqrt(ry)
         self.residHistory.append(self.residNorm0)
         threshold = max(self.abstol, self.reltol * self.residNorm0)
 
@@ -151,7 +151,7 @@ class CG( KrylovMethod ):
             p -= r
 
             ry = ry_next
-            residNorm = sqrt(ry)
+            residNorm = np.sqrt(ry)
             self.residHistory.append(residNorm)
 
             info = '%6d  %7.1e  %8.1e' % (nMatvec, residNorm, pAp)
